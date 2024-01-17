@@ -8,6 +8,63 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/7b12bcc245.js" crossorigin="anonymous"></script>
     <title>Vigneshwaran Weds Lavanya</title>
+    <style>
+        #topToBottom {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+            display: block;
+            opacity: 0;
+            animation: fadeIn 2s ease-out forwards;
+            /* Adjust the animation duration as needed */
+        }
+
+        .scroll-indicator i {
+            font-size: 24px;
+            /* Adjust the size as needed */
+            transition: color 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .loading-icon {
+            /* Style for the loading icon in the middle section */
+            font-size: 24px;
+            color: #333;
+            /* Adjust the color as needed */
+            display: none;
+        }
+
+        .loading-image {
+            /* Style for the loading image in the middle section */
+            width: 100%;
+            height: auto;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -83,9 +140,18 @@
 
 
             <div class="gallery hz-margin reveal">
-                <div class="gallery-img"></div>
-                <div class="gallery-img"></div>
-                <div class="gallery-img"></div>
+
+                <!-- Your content goes here -->
+                <div class="middle-section">
+                    <!-- Your content in the middle section -->
+                    <i class="fas fa-spinner fa-spin loading-icon"></i>
+                    <!-- <img src="your-image.jpg" alt="Image" class="loading-image"> -->
+                    <div class="gallery-img"></div>
+                    <div class="gallery-img"></div>
+                    <div class="gallery-img"></div>
+                </div>
+
+
             </div>
 
 
@@ -148,13 +214,83 @@
                 <h1>Hope to See You!</h1>
                 <!-- <button class="huge-btn">RSVP</button> -->
             </div>
-
+            <div id="topToBottom" class="scroll-indicator"><i class="fas fa-arrow-down" id="scrollIcon"></i></div>
 
 
         </div>
     </div>
 
     <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var scrollIndicator = document.getElementById('topToBottom');
+            var scrollIcon = document.getElementById('scrollIcon');
+            var middleSection = document.querySelector('.middle-section');
+            var loadingIcon = document.querySelector('.loading-icon');
+            var loadingImage = document.querySelector('.loading-image');
+
+            // Show the scroll indicator initially
+            scrollIndicator.style.display = 'block';
+
+            // Add click event listener to scroll to top or bottom when the button is clicked
+            scrollIndicator.addEventListener('click', function () {
+                var scrollPosition = window.scrollY;
+                var windowHeight = window.innerHeight;
+                var documentHeight = document.body.clientHeight;
+
+                // Scroll to top if the icon is clicked at the bottom, and vice versa
+                if (scrollPosition + windowHeight >= documentHeight) {
+                    // Scrolled to the bottom, scroll to the top
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // Scroll to the bottom
+                    window.scrollTo({
+                        top: documentHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+
+            // Add scroll event listener to update the icon based on scroll position
+            window.addEventListener('scroll', function () {
+                var scrollPosition = window.scrollY;
+                var windowHeight = window.innerHeight;
+                var documentHeight = document.body.clientHeight;
+
+                // Update the icon based on scroll direction
+                if (scrollPosition === 0) {
+                    // At the top
+                    scrollIcon.className = 'fas fa-arrow-down';
+                    loadingIcon.style.display = 'none'; // Hide loading icon at the top
+                    loadingImage.style.display = 'none'; // Hide loading image at the top
+                } else if (scrollPosition + windowHeight >= documentHeight) {
+                    // At the bottom
+                    scrollIcon.className = 'fas fa-arrow-up';
+                    loadingIcon.style.display = 'none'; // Hide loading icon at the bottom
+                } else {
+                    // In between
+                    // Always show the "down" arrow when scrolling down
+                    scrollIcon.className = 'fas fa-arrow-down';
+
+                    // Show loading icon and hide loading image in the middle section
+                    loadingIcon.style.display = 'block';
+                    loadingImage.style.display = 'none';
+
+                    // Add blink effect when scrolling up
+                    if (scrollPosition > windowHeight / 2) {
+                        scrollIcon.style.animation = 'blink 0.5s infinite';
+                    } else {
+                        scrollIcon.style.animation = 'none';
+                    }
+                }
+            });
+        });
+
+    </script>
+
 </body>
 
 </html>
